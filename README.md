@@ -21,7 +21,7 @@ Este repositorio incluye además la **colección de pruebas en Postman** y el **
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/TU-USUARIO/neobarber-backend.git
+git clone https://github.com/sesshomaru1980/formato_casos_prueba.git
 cd neobarber-backend
 2. Instalar dependencias
 npm install
