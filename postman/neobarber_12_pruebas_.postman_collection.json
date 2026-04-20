@@ -1,0 +1,644 @@
+{
+  "info": {
+    "_postman_id": "59fa90fb-9dbf-445e-b651-e20836bb2146",
+    "name": "neobarber_12_pruebas_postman",
+    "description": "Colección con 12 pruebas para NeoBarbe",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54113591",
+    "_collection_link": "https://go.postman.co/collection/54113591-59fa90fb-9dbf-445e-b651-e20836bb2146?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "001 GET /health",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Health responde 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Tiempo menor a 1 segundo\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        },
+        "description": "Prueba de disponibilidad del backend."
+      },
+      "response": []
+    },
+    {
+      "name": "002 POST /api/auth/register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Register devuelve 200, 201, 400 o 409\", function () {",
+              "    pm.expect([200, 201, 400, 409]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Cliente Prueba\",\n  \"email\": \"{{clientEmail}}\",\n  \"password\": \"{{clientPassword}}\",\n  \"role\": \"Client\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        },
+        "description": "Registro de usuario cliente."
+      },
+      "response": []
+    },
+    {
+      "name": "003 POST /api/auth/login correcto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Login correcto responde 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const data = pm.response.json();",
+              "pm.test(\"Devuelve token\", function () {",
+              "    pm.expect(data.accessToken || data.token).to.exist;",
+              "});",
+              "if (data.accessToken) {",
+              "    pm.collectionVariables.set(\"token\", data.accessToken);",
+              "} else if (data.token) {",
+              "    pm.collectionVariables.set(\"token\", data.token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{clientEmail}}\",\n  \"password\": \"{{clientPassword}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        },
+        "description": "Login correcto de cliente."
+      },
+      "response": []
+    },
+    {
+      "name": "004 GET /api/users/me",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Users/me responde 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const data = pm.response.json();",
+              "pm.test(\"Devuelve usuario\", function () {",
+              "    pm.expect(data).to.be.an(\"object\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/users/me",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "me"
+          ]
+        },
+        "description": "Consulta del usuario autenticado."
+      },
+      "response": []
+    },
+    {
+      "name": "005 POST /api/auth/login admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Login admin responde 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const data = pm.response.json();",
+              "pm.test(\"Devuelve token admin\", function () {",
+              "    pm.expect(data.accessToken || data.token).to.exist;",
+              "});",
+              "if (data.accessToken) {",
+              "    pm.collectionVariables.set(\"adminToken\", data.accessToken);",
+              "} else if (data.token) {",
+              "    pm.collectionVariables.set(\"adminToken\", data.token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        },
+        "description": "Login correcto de administrador."
+      },
+      "response": []
+    },
+    {
+      "name": "006 GET /api/services",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Listar servicios responde 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const data = pm.response.json();",
+              "pm.test(\"La respuesta es un arreglo\", function () {",
+              "    pm.expect(data).to.be.an(\"array\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/services",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "services"
+          ]
+        },
+        "description": "READ del módulo servicios."
+      },
+      "response": []
+    },
+    {
+      "name": "007 POST /api/services",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Crear servicio responde 200 o 201\", function () {",
+              "    pm.expect([200, 201]).to.include(pm.response.code);",
+              "});",
+              "if ([200, 201].includes(pm.response.code)) {",
+              "    const data = pm.response.json();",
+              "    pm.test(\"Devuelve id\", function () {",
+              "        pm.expect(data.id || data._id).to.exist;",
+              "    });",
+              "    pm.collectionVariables.set(\"serviceId\", data.id || data._id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Corte Clásico\",\n  \"description\": \"Servicio de prueba desde Postman\",\n  \"durationMinutes\": 30,\n  \"price\": 20000,\n  \"imageUrl\": \"\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/services",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "services"
+          ]
+        },
+        "description": "CREATE del CRUD de servicios."
+      },
+      "response": []
+    },
+    {
+      "name": "008 PUT /api/services/:id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Actualizar servicio responde 200 o 201\", function () {",
+              "    pm.expect([200, 201]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Corte Clásico Actualizado\",\n  \"description\": \"Servicio actualizado\",\n  \"durationMinutes\": 35,\n  \"price\": 25000,\n  \"imageUrl\": \"\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/services/{{serviceId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "services",
+            "{{serviceId}}"
+          ]
+        },
+        "description": "UPDATE del CRUD de servicios."
+      },
+      "response": []
+    },
+    {
+      "name": "009 DELETE /api/services/:id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Eliminar servicio responde 200 o 204\", function () {",
+              "    pm.expect([200, 204]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/services/{{serviceId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "services",
+            "{{serviceId}}"
+          ]
+        },
+        "description": "DELETE del CRUD de servicios."
+      },
+      "response": []
+    },
+    {
+      "name": "010 GET /api/barbers (prepara barberUserId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Listar barberos responde 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const data = pm.response.json();",
+              "pm.test(\"La respuesta es un arreglo\", function () {",
+              "    pm.expect(data).to.be.an(\"array\");",
+              "});",
+              "if (data.length > 0) {",
+              "    const first = data[0];",
+              "    const barberId = first?.userId?._id || first?.user?._id || first?.user?.id || first?.userId || first?._id;",
+              "    if (barberId) {",
+              "        pm.collectionVariables.set(\"barberUserId\", barberId);",
+              "    }",
+              "}",
+              "pm.test(\"barberUserId quedó cargado\", function () {",
+              "    pm.expect(pm.collectionVariables.get(\"barberUserId\")).to.not.be.empty;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/barbers",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "barbers"
+          ]
+        },
+        "description": "Obtiene barberos y guarda barberUserId antes de crear la cita."
+      },
+      "response": []
+    },
+    {
+      "name": "011 POST /api/appointments",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Crear cita SOLO devuelve 200 o 201\", function () {",
+              "    pm.expect([200, 201]).to.include(pm.response.code);",
+              "});",
+              "if ([200, 201].includes(pm.response.code)) {",
+              "    const data = pm.response.json();",
+              "    const appointmentId = data.id || data._id || (data.data && (data.data.id || data.data._id));",
+              "    pm.test(\"Si fue exitosa, devuelve datos\", function () {",
+              "        pm.expect(data.message !== undefined || appointmentId !== undefined || data.data !== undefined).to.be.true;",
+              "    });",
+              "    if (appointmentId) {",
+              "        pm.collectionVariables.set(\"appointmentId\", appointmentId);",
+              "    }",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"barberId\": \"{{barberUserId}}\",\n  \"serviceId\": \"{{serviceId}}\",\n  \"startAt\": \"2026-10-01T15:00:00.000Z\",\n  \"notes\": \"Cita de prueba\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/appointments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "appointments"
+          ]
+        },
+        "description": "Creación de cita. Solo pasa si responde 200 o 201."
+      },
+      "response": []
+    },
+    {
+      "name": "012 FAILED POST /api/auth/login incorrecto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Login incorrecto devuelve 401\", function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{clientEmail}}\",\n  \"password\": \"clave_incorrecta\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        },
+        "description": "Prueba negativa para obtener captura en rojo o confirmar 401."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "clientEmail",
+      "value": "clienteprueba@neo.com"
+    },
+    {
+      "key": "clientPassword",
+      "value": "123456"
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@neo.com"
+    },
+    {
+      "key": "adminPassword",
+      "value": "123456"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "serviceId",
+      "value": ""
+    },
+    {
+      "key": "barberUserId",
+      "value": ""
+    },
+    {
+      "key": "appointmentId",
+      "value": ""
+    }
+  ]
+}
