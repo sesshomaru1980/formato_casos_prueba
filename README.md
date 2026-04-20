@@ -1,70 +1,92 @@
-<!--
-README del proyecto NeoBarber API.
-Incluye instrucciones de instalación/ejecución, variables de entorno y endpoints.
--->
+NeoBarber Backend
 
-# NeoBarber API FULL (Node.js + Express + MongoDB + JWT)
+Backend del sistema **NeoBarber**, desarrollado con **Node.js, Express y MongoDB**, que permite gestionar usuarios, autenticación, servicios, barberos y citas.
 
-Proyecto para evidencia GA8-220501096-AA1-EV01: integración de módulos por componentes/capas.
+Este repositorio incluye además la **colección de pruebas en Postman** y el **formato de evidencias en Excel** requerido para la actividad del SENA.
 
-## Módulos incluidos
-1) Auth (register/login JWT)
-2) Users (perfil /me)
-3) Services (CRUD Admin)
-4) Barbers (perfil + disponibilidad semanal)
-5) Appointments (agendar, listar mis citas, cambiar estado; evita solapamiento)
-6) Availability (slots del día + bloqueos de agenda del barbero)
+---
 
-## Arquitectura por capas (por módulo)
-- routes -> controller -> service -> repository -> model (Mongoose)
+## 🚀 Tecnologías utilizadas
 
-## Requisitos
-- Node.js 18+
-- MongoDB local o Atlas
+- Node.js
+- Express
+- MongoDB (Base de datos NoSQL)
+- JWT (Autenticación)
+- Postman (Pruebas de API)
 
-## Configuración
-1) Copia `.env.example` a `.env`
-2) `npm i`
-3) `npm run dev`
-4) Probar: `GET http://localhost:3000/health`
+---
 
-## Endpoints
-### Health
-- `GET /health`
+## ⚙️ Instalación y ejecución
 
-### Auth
-- `POST /api/auth/register`
-- `POST /api/auth/login`
+### 1. Clonar el repositorio
 
-### Users
-- `GET /api/users/me` (Bearer)
+```bash
+git clone https://github.com/TU-USUARIO/neobarber-backend.git
+cd neobarber-backend
+2. Instalar dependencias
+npm install
+3. Configurar variables de entorno
 
-### Services (Admin)
-- `GET /api/services`
-- `POST /api/services` (Admin)
-- `PUT /api/services/:id` (Admin)
-- `DELETE /api/services/:id` (Admin)
+Crear un archivo .env basado en .env.example
 
-### Barbers
-- `GET /api/barbers`
-- `POST /api/barbers/upsert` (Admin/Barber)
+Ejemplo:
 
-### Availability (agenda)
-- `GET /api/availability/daily-slots?barberId=<USER_ID_BARBER>&dateUtc=2026-03-01T00:00:00.000Z&slotMinutes=30`
-- `POST /api/availability/block` (Admin/Barber)
-- `DELETE /api/availability/block/:id` (Admin/Barber)
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/neobarber
+JWT_SECRET=tu_clave_secreta
+4. Ejecutar el servidor
+npm run dev
 
-### Appointments (citas)
-- `POST /api/appointments` (Client)
-- `GET /api/appointments/me` (Bearer)
-- `PUT /api/appointments/:id/status` (Bearer)
+El servidor estará disponible en:
 
-## Roles
-- Admin
-- Barber
-- Client
+http://localhost:3000
+🧪 Pruebas con Postman
 
-## Pruebas (smoke)
-`npm test`
+La colección de pruebas se encuentra en:
 
-> Para pruebas completas por módulo, se recomienda usar una base de datos de pruebas o Mongo Memory Server.
+postman/neobarber_12_pruebas_.postman_collection.json
+Incluye:
+12 casos de prueba
+CRUD completo del módulo de servicios
+Pruebas positivas (correctas)
+Pruebas negativas (errores controlados)
+Validación de autenticación con JWT
+Cómo usarla:
+Abrir Postman
+Importar la colección
+Ejecutar en orden:
+1. Login cliente
+2. Login admin
+3. Crear servicio
+4. Obtener barberos
+5. Crear cita
+📊 Evidencia de pruebas
+
+El formato diligenciado se encuentra en:
+
+evidencia/casos_prueba_neobarber.xlsx
+Contiene:
+Casos de prueba definidos
+Resultados esperados y obtenidos
+Pruebas aprobadas
+Pruebas fallidas (negativas)
+Evidencias para validación
+🔐 Funcionalidades del sistema
+Registro de usuarios
+Inicio de sesión con JWT
+Gestión de servicios (CRUD)
+Gestión de barberos
+Gestión de citas
+Control de acceso por roles
+🎯 Objetivo del proyecto
+
+Desarrollar y validar una API REST para la gestión de una barbería, aplicando buenas prácticas de desarrollo y pruebas de software mediante herramientas como Postman.
+
+👨‍💻 Autor
+
+Pablo Prado
+
+📌 Notas
+Asegúrate de tener MongoDB en ejecución antes de iniciar el servidor
+Algunas pruebas requieren usuario administrador previamente creado
+Las variables de Postman deben configurarse correctamente para ejecutar todas las prueba
